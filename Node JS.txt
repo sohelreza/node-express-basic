@@ -1,0 +1,336 @@
+
+-> node js is a open source project, which is being as a backend technology for a long time. Browser is runtime for javascript, node js is also a runtime for javascript where we can run javascript code in the server side.
+
+-> In google chrome, V8 engine which is made by C++ and an open source project, converts the javascript code to machine code which machine can understand. Before V8 engine, javascript was a interpreted language, so it was not as fast as other compiled language. V8 engine make javascript faster by just in time (JIT) compile. So, node js is a C++ program, which is made by using V8 engine. 
+
+-> Ryan Dahl created node js in 2009 
+
+-> npm is a packege manager, which is created by Isaac Z. Schlueter. Using npm, other developers can share their node modules or packege.
+
+-> mongo db was introduced in 2009, which is non relational, NoSql database. It saves data as a json data, which is in binary format. Mongo became popular when social medias (fb, twitter etc) started to serve their api s, which was in json format. Back then, api response was popular as SOAP, XML format.
+
+-> javascript is a programming language and javascript runtime runs the javascript codes in the browser, so javascript runtime can understand the javascript code in the browser.
+
+-> DOM is a huge object which contains all the content of a web page. javascript engine has access to this DOM. So, when we write javascript codes, javascript engines manipulate the DOM accordingly.
+
+-> Mozilla Firefox has Spider Monkey Engine, Google Chrome has V8 Engine, Internet Explorer has Chakra, Safari has Javascript Core.
+
+-> node js is a javascript runtime and it is a C++ program.
+
+-> when the client is a web browser, then the server response is html and data. if the client is a mobile app, then the response is data
+
+-> if the request contains a simple task like calculation, then server can handle this simple task, this is called CPU intensive task. if the request contains database request or file system request or any other external storage request, then this is called I/O intensive task.
+
+-> Java uses Tomcat server, which can process multiple threads (generally 200 at a time).
+
+-> javascript is a sigle threaded language, but node js uses libuv library which uses system kernal to handle multiple reqests. libuv is built upon C. When a process is completed, then a callback function invoked, from which client gets the output. Event loop of node js assigns task continuously to the javascript threads.
+
+************************************************************** tutorial 3 *********************************************************************
+
+-> in packege.json file, there are a list packages which we install externally using npm. (^) sign infront of any package version means that this project can use this version or upper version of this package.
+
+-> in package.lock.json file, we can find the exact version of the packages.
+
+-> to use the package we can code like this : const anyName = require('packageName'); we can run the code by - node fileName.js 
+
+-> npm is part of github as well as microsoft, yarn is developed by facebook. If we use yarn, then instead of package.lock.json there will be a yarn.lock file, which describes the same thing.
+
+-> to code in a coventional way, air bnb guideline is the most popular guideline. we can follow the guideline by installing ESlint and Prettier extension. path autocomplete is also an important one.
+
+-> if there is any devDependencies in the package.json file, then this dependencies will only be used while development, they will not go to production.
+
+************************************************************** tutorial 4 *********************************************************************
+
+-> in browser we have a window object which contains a lots of property and methods. In node js we have global object which contains fewer properties like window object, which we can use directly in any file on our node js project.
+
+-> every js file in node js project is called module. A data from a module can't change or polute value in other module, e.g. if we use var in a js file in web, it can replace other var with same name in another file.
+
+-> in node js project, if we want to share a data to another file, then we have to export it at first like this : module.exports(dataName);
+and we have to import it in our destined file like this : const anyName = require('./fileName');
+
+by default exports contain an empty object. so if we don't export it, then we will get an empty object.
+
+-> any code in any file written by us in a node js project, is invisibly wrapped inside a IIFE function. So another file can't polute our data in a file, because it is scoped inside a function. Although, we have some parameters by default inside this IIFE function e.g. exports, require, module, __filename, __dirname, so that's why we don't have to import this keywords explicitly in our project file. So, whenever we exports a file to another file, we invisibly exports a function to that file, which by defauls return a module.exports that means an empty object.
+
+-> we can export multiple data in a object like this : module.exports = {firstData: data1, secondData: data2}
+
+************************************************************** tutorial 5 *********************************************************************
+
+-> we can use lots of built in module from node modules core.
+
+-> to use path module require it like this : const path = require('path'); 
+check documentation from nodejs.org or w3schools for method and property list.
+
+-> to use os module require it like this : const os = require('os');
+check documentation from nodejs.org or w3schools for method and property list.
+
+-> to use file system module require it like this : const fs = require('fs');
+check documentation from nodejs.org or w3schools for method and property list.
+This work is an I/O task, so there are both async and sync methods for it and it is recommended to use async method.
+
+-> if we want to use event module from a different file we should code like this : 
+
+		School.js -> 
+
+			const EventEmitter = require('events');
+
+			class School extends EventEmitter {
+				startPeriod () {
+				console.log("Class Started");
+				
+				// raise event when bell rings
+				// raise an event
+				setTimeOut( () => {
+					this.emit('bellRing', {
+						period: 'first',
+						text: 'period ended',
+						});
+					}, 2000 );
+				}
+			}
+
+			module.exports = School;
+
+
+		index.js -> 
+
+			const School = require('./school');
+
+			const school = new School();
+
+			// register a listener for bellRing event
+
+			school.on('bellRing', ({ period, text }) => {
+				console.log(`We need to run because ${period} ${text}`);
+			});
+
+			school.startPeriod();
+
+Here, we have added a event listener before we call the startPeriod method, unless the event listener can't find the event. events module gives us a class. We have to use same object to use the events module properly, so the event emit and on method should come from same object. Thus, we have to create a class in the School.js file which extends the events class property and used this class in index.js file, so that the event emit and on method can be from same object, as we know that a class is a blueprint for a object. emit method takes the event name as a first parameter, and we can multiple parameters then, which are optionals, but it is recommended to use a object if it has multiple data as parameters. on method takes the event name as the first parameter on which the method should response. As a second parameter, we should add a callback function which would fire upon the event happens, in this case, we are just logging a text whenever startPeriod method is called which contains an event named bellRing. If this event emit and on methods are in same file then there is no need to create a class, a simple object can do the task.
+
+-> to use http module we can code like this : 
+
+const http = require('http');
+
+const server = http.createServer( (req, res) => {
+		if(req.url === '/') {
+			res.write('Hello programmers!');
+			res.write('How is it going?');
+			res.end();
+		} else if (req.url === '/about') {
+			res.write('This is about us page');
+			res.end();
+		} else {
+			res.write('Not found');
+			res.end();
+		}
+	} );
+	
+server.listen(3000);
+
+console.log('Listening on port 3000');
+
+***************************************************** TUTORIAL 6 (STREAM & BUFFER)************************************************************
+
+-> stream is a process name where we get data in real time, like youtube video. In a stream, we get data in lots of buffer. Buffer is one kind of data type. Example : youtube server has a stream data, which will be sent to the client as lots of buffers, then client will get the full data. In addtion to that, a buffer is a packet which contains so many broken parts. When a packet of broken parts are completed, then it will be sent as a buffer to the client. Buffer can't be sent to the client until the packet is full. So buffer is a chunk of data. These small parts is in binary format, so we can't work with that small parts, but we can work with the buffer, which is an object or a data type.
+
+-> Buffer is 2 types. Read stream, write stream.
+
+-> A simple readstream code can be like this : 
+
+			const fs = require('fs');
+
+			const ourReadStream = fs.createReadStream(`${__dirname}/bigsdata.txt`);
+
+			ourReadStream.on('data', (chunk) => {
+					console.log(chunk.toString());
+				 };
+				
+			console.log('hello');
+
+Here, we get the binary data from the chunk, by using the toString() function we can convert it to text, we can also use utf-8 formating as a parameter on the createReadStream function instead of using the toString function. If we use a simple console log after the stream function, at first console log will be printed, then the chunk will come, because the stream is event listener, it will not fire until we get the buffer or chunk.
+
+-> to post a simple big data using streaming can be like this:
+
+Read Stream : 
+
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+		if (req.url === '/') {
+			res.write('<html><head><title>Form</title></head>');
+			res.write('<body><form method="post" action="/process"><input name="message" /></form></body>');
+			res.end();
+		} else if (req.url === '/process' && req.method === 'POST') {
+			req.on('data', (chunk) => {
+				console.log(chunk);
+			});
+			res.write('Thank you for submitting');
+			res.end();
+		} else {
+			res.write('Not Found');
+			res.end();
+		}
+	});
+	
+	server.listen(3000);
+	
+	console.log('listening on port 3000');
+
+here we have to accept the data as a chunk on /process route.
+
+
+if we want to log data after getting all the buffer, then code will be like this:
+
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+		if (req.url === '/') {
+			res.write('<html><head><title>Form</title></head>');
+			res.write('<body><form method="post" action="/process"><input name="message" /></form></body>');
+			res.end();
+		} else if (req.url === '/process' && req.method === 'POST') {
+		const body = [];
+			req.on('data', (chunk) => {
+				body.push(chunk);
+			});
+			req.on('end', () => {
+				console.log('strem finished');
+				const parsedBody = Buffer.concat(body).toString();
+				console.log(parsedBody);
+			});
+			res.write('Thank you for submitting');
+			res.end();
+		} else {
+			res.write('Not Found');
+			res.end();
+		}
+	});
+	
+	server.listen(3000);
+	
+	console.log('listening on port 3000');
+
+
+If we want to write a file code will be like this : 
+
+const fs = require('fs');
+
+const ourReadStream = fs.createReadStream(`${__dirname}/bigdata.txt`);
+const ourWriteStream = fs.createWriteStream(`${__dirname}/output.txt`);
+
+ourReadStream.on('data', (chunk) => {
+	ourWriteStream.write(chunk);
+})
+
+
+-> to simplify the read and write stream, we can use pipe method like this : 
+
+const fs = require('fs');
+
+const ourReadStream = fs.createReadStream(`${__dirname}/bigdata.txt`);
+const ourWriteStream = fs.createWriteStream(`${__dirname}/output.txt`);
+
+ourReadStream.pipe(ourWriteStream);
+
+-> to get a data in a streaming way and put it in the response in a streaming way, code can be like this : 
+
+const http = require('http');
+const fs = require('fs');
+
+const server = http.createServer((req, res) => {
+	const myReadStream = fs.createReadStream(`${__dirname}/bigdata.txt`, 'utf8');
+	myReadStream.pipe(res);
+})
+
+server.listen(3000);
+
+console.log('listening on port 3000');
+
+********************************************** TUTORIAL 7 ( Understanding node js )************************************************************
+
+-> the starting file of a node js project should be named index.js or app.js. to run the project we should run this command : 
+	node index or node app
+
+-> at first we have to write a comment where we can add title, description, author and date of the project 
+
+-> then we should include dependencies like this :
+
+	// Dependencies
+	const mathLibrary = require('./lib/math');
+	const quotesLibrary = require('./lib/quotes');
+	
+-> then we should add module scaffolding like this :
+
+	// App object - Module scaffolding
+	const app = {};
+	
+	scaffolding is like an structure of an app, which we will populate later.
+	
+-> then we should add configuration of a project like this:
+
+	// Configuration
+	app.config = {
+		timeBetweenQuotes: 1000,
+	}
+	
+here, timeBetweenQuotes is a timer which tells, how much seconds later we will get the quotes.
+
+-> then we should include our custom functions in the file.
+
+
+-> we can use a scaffolding object like this : 
+
+	const math = {};
+	
+	math.getRandomNumber = function getRandomNumber(min, max) {
+		...
+		
+		return ...
+	}
+	
+	module.exports = math;
+
+********************************************** TUTORIAL 8 ( Raw Node Project (Part 1) )*******************************************************
+	
+check out the code to know the basic setup for a node js proeject.
+
+********************************************** TUTORIAL 9 ( Raw Node Project (Part 2) )*******************************************************
+
+00:35 hours running
+	
+-> to create a folder to save the data, command is : mkdir .data
+	here dot(.) means the folder will be hidden
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
