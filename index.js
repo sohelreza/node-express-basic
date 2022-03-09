@@ -16,22 +16,20 @@ const data = require("./lib/data");
 
 // testing file system
 // @TODO: should be deleted later
-// data.create(
-//   "test",
-//   "newFile",
-//   { name: "Bangladesh", language: "Bangla" },
-//   (err) => {
-//     console.log(`error was`, err);
-//   }
-// );
+data.create(
+  "test",
+  "newFile",
+  { name: "Bangladesh", language: "Bangla" },
+  (err) => {
+    console.log(`error was`, err);
+  }
+);
 
 // app object - module scaffolding
 const app = {};
 
 // configuration
-app.config = {
-  port: 3000,
-};
+app.config = {};
 
 // create server
 app.createServer = () => {
@@ -39,10 +37,6 @@ app.createServer = () => {
   server.listen(environment.port, () => {
     console.log(`listening to port ${environment.port}`);
   });
-
-  // server.listen(app.config.port, () => {
-  //   console.log(`listening to port ${app.config.port}`);
-  // });
 };
 
 // handle Request Response
