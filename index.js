@@ -16,12 +16,12 @@ const data = require("./lib/data");
 
 // testing file system
 // @TODO: should be deleted later
-data.create(
+data.update(
   "test",
   "newFile",
-  { name: "Bangladesh", language: "Bangla" },
+  { name: "England", language: "English" },
   (err) => {
-    console.log(`error was`, err);
+    console.log(err);
   }
 );
 
