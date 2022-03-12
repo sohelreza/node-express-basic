@@ -296,11 +296,13 @@ here, timeBetweenQuotes is a timer which tells, how much seconds later we will g
 check out the code to know the basic setup for a node js proeject.
 
 ********************************************** TUTORIAL 9 ( Raw Node Project (Part 2) )*******************************************************
-
-00:49 hours running
 	
 -> to create a folder to save the data, command is : mkdir .data
 	here dot(.) means the folder will be hidden
+
+********************************************** TUTORIAL 10 ( Raw Node Project (Part 3) )*******************************************************
+
+00:25 hours running
 
 
 
