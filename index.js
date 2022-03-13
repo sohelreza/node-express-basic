@@ -16,9 +16,9 @@ const data = require("./lib/data");
 
 // testing file system
 // @TODO: should be deleted later
-data.delete("test", "newFile", (err) => {
-  console.log(err);
-});
+// data.delete("test", "newFile", (err) => {
+//   console.log(err);
+// });
 
 // app object - module scaffolding
 const app = {};
