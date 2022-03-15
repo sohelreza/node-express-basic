@@ -47,7 +47,7 @@ handler._token.post = (requestProperties, callback) => {
     data.read("users", phone, (err1, userData) => {
       let hashedPassword = hash(password);
 
-      if (hashedPassword === userData.password) {
+      if (hashedPassword === parseJSON(userData).password) {
         let tokenId = createRandomString(20);
         let expires = Date.now() + 60 * 60 * 1000;
         let tokenObject = {
@@ -73,121 +73,83 @@ handler._token.post = (requestProperties, callback) => {
   }
 };
 
-// @TODO: Authentication
 handler._token.get = (requestProperties, callback) => {
-  // check the phone number is valid or not
-  const phone =
-    typeof requestProperties.queryStringObject.phone === "string" &&
-    requestProperties.queryStringObject.phone.trim().length === 11
-      ? requestProperties.queryStringObject.phone
+  // check the id is valid or not
+  const id =
+    typeof requestProperties.queryStringObject.id === "string" &&
+    requestProperties.queryStringObject.id.trim().length === 20
+      ? requestProperties.queryStringObject.id
       : false;
 
-  if (phone) {
-    // lookup the user
-    data.read("users", phone, (err, u) => {
-      const user = { ...parseJSON(u) };
-      if (!err && user) {
-        delete user.password;
-        callback(200, user);
+  if (id) {
+    // lookup the token
+    data.read("tokens", id, (err, tokenData) => {
+      const token = { ...parseJSON(tokenData) };
+      if (!err && token) {
+        callback(200, token);
       } else {
-        callback(404, { error: "Requested user was not found" });
+        callback(404, { error: "Requested token was not found" });
       }
     });
   } else {
-    callback(404, { error: "Requested user was not found" });
+    callback(404, { error: "Requested token was not found" });
   }
 };
 
-// @TODO: Authentication
 handler._token.put = (requestProperties, callback) => {
-  // check the phone number is valid or not
-
-  const phone =
-    typeof requestProperties.body.phone === "string" &&
-    requestProperties.body.phone.trim().length === 11
-      ? requestProperties.body.phone
+  const id =
+    typeof requestProperties.body.id === "string" &&
+    requestProperties.body.id.trim().length === 20
+      ? requestProperties.body.id
       : false;
 
-  const firstName =
-    typeof requestProperties.body.firstName === "string" &&
-    requestProperties.body.firstName.trim().length > 0
-      ? requestProperties.body.firstName
+  const extend =
+    typeof requestProperties.body.extend === "boolean" &&
+    requestProperties.body.extend
+      ? true
       : false;
 
-  const lastName =
-    typeof requestProperties.body.lastName === "string" &&
-    requestProperties.body.lastName.trim().length > 0
-      ? requestProperties.body.lastName
-      : false;
+  if (id && extend) {
+    data.read("tokens", id, (err1, tokenData) => {
+      let tokenObject = parseJSON(tokenData);
 
-  const password =
-    typeof requestProperties.body.password === "string" &&
-    requestProperties.body.password.trim().length > 0
-      ? requestProperties.body.password
-      : false;
+      if (tokenObject.expires > Date.now()) {
+        tokenObject.expires = Date.now() + 60 * 60 * 1000;
 
-  if (phone) {
-    if (firstName || lastName || password) {
-      // lookup the user
-      data.read("users", phone, (err1, uData) => {
-        const userData = { ...parseJSON(uData) };
-
-        if (!err1 && userData) {
-          if (firstName) {
-            userData.firstName = firstName;
+        // store the updated token
+        data.update("tokens", id, tokenObject, (err2) => {
+          if (!err2) {
+            callback(200);
+          } else {
+            callback(500, { error: "There was a server side error!" });
           }
-          if (lastName) {
-            userData.lastName = lastName;
-          }
-          if (password) {
-            userData.password = hash(password);
-          }
-
-          // store to database
-          data.update("users", phone, userData, (err2) => {
-            if (!err2) {
-              callback(200, {
-                error: "User was updated successfully!",
-              });
-            } else {
-              callback(500, {
-                error: "There was a problem in the server side",
-              });
-            }
-          });
-        } else {
-          callback(400, {
-            error: "You have a problem in your request!",
-          });
-        }
-      });
-    } else {
-      callback(400, { error: "You have a problem in your request." });
-    }
+        });
+      } else {
+      }
+    });
   } else {
     callback(400, {
-      error: "Invalid phone number. Please try again.",
+      error: "There was a problem in your request",
     });
   }
 };
 
-// @TODO: Authentication
 handler._token.delete = (requestProperties, callback) => {
-  // check the phone number is valid or not
-  const phone =
-    typeof requestProperties.queryStringObject.phone === "string" &&
-    requestProperties.queryStringObject.phone.trim().length === 11
-      ? requestProperties.queryStringObject.phone
+  // check the token is valid or not
+  const id =
+    typeof requestProperties.queryStringObject.id === "string" &&
+    requestProperties.queryStringObject.id.trim().length === 20
+      ? requestProperties.queryStringObject.id
       : false;
 
-  if (phone) {
-    // lookup the user
-    data.read("users", phone, (err1, userData) => {
-      if (!err1 && userData) {
-        data.delete("users", phone, (err2) => {
+  if (id) {
+    // lookup the token
+    data.read("tokens", id, (err1, tokenData) => {
+      if (!err1 && tokenData) {
+        data.delete("tokens", id, (err2) => {
           if (!err2) {
             callback(200, {
-              message: "User was successfully deleted",
+              message: "Token was successfully deleted",
             });
           } else {
             callback(500, {
@@ -206,6 +168,23 @@ handler._token.delete = (requestProperties, callback) => {
       error: "There was a problem in your request",
     });
   }
+};
+
+handler._token.verify = (id, phone, callback) => {
+  data.read("tokens", id, (err, tokenData) => {
+    if (!err && tokenData) {
+      if (
+        parseJSON(tokenData).phone === phone &&
+        parseJSON(tokenData).expires > Date.now()
+      ) {
+        callback(true);
+      } else {
+        callback(false);
+      }
+    } else {
+      callback(false);
+    }
+  });
 };
 
 module.exports = handler;
