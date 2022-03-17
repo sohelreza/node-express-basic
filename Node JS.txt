@@ -312,7 +312,7 @@ check out the code to know the basic setup for a node js proeject.
 
 ********************************************** TUTORIAL 12 ( Raw Node Project (Part 5) )*******************************************************
 
-00:15 hours running
+00:19 hours running
 
 
 
