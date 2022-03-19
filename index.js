@@ -13,15 +13,16 @@ const { StringDecoder } = require("string_decoder");
 const { handleReqRes } = require("./helpers/handleReqRes");
 const environment = require("./helpers/environments");
 const data = require("./lib/data");
-
-// testing file system
-// @TODO: should be deleted later
-// data.delete("test", "newFile", (err) => {
-//   console.log(err);
-// });
+const { sendTwilioSms } = require("./helpers/notifications");
 
 // app object - module scaffolding
 const app = {};
+
+// testing twilio sms
+// @TODO: should be deleted later
+sendTwilioSms("01771323554", "Test message", (err) => {
+  console.log(`This is the error : `, err);
+});
 
 // configuration
 app.config = {};
