@@ -320,7 +320,7 @@ check out the code to know the basic setup for a node js proeject.
 
 ********************************************** TUTORIAL 14 ( Raw Node Project (Part 7) )*******************************************************
 
-00:00 hours running
+00:29 hours running
 
 
 
