@@ -1,0 +1,9 @@
+{
+    "id": "n7zh6xfjg39h0355ar98",
+    "userPhone": "01771323554",
+    "protocol": "https",
+    "url": "yahoo.com",
+    "method": "GET",
+    "successCodes": [200, 201, 301],
+    "timeoutSeconds": 2
+}
