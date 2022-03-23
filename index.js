@@ -1,41 +1,28 @@
 /*
  *
- * Title: Uptime Monitoring Application
- * Description: A RESTFul API to monitor up or down time of user defined links
+ * Title: Project Initial File
+ * Description: Initial file to start the node server and workers
  * Author: S. M. Sohel Reza (ChefOnline)
- * Date: 21/02/2022
+ * Date: 20/03/2022
  *
  */
 
 // Dependencies
-const http = require("http");
-const { StringDecoder } = require("string_decoder");
-const { handleReqRes } = require("./helpers/handleReqRes");
-const environment = require("./helpers/environments");
-const data = require("./lib/data");
-
-// testing file system
-// @TODO: should be deleted later
-// data.delete("test", "newFile", (err) => {
-//   console.log(err);
-// });
+const server = require("./lib/server");
+const workers = require("./lib/worker");
 
 // app object - module scaffolding
 const app = {};
 
-// configuration
-app.config = {};
+app.init = () => {
+  // start the server
+  server.init();
 
-// create server
-app.createServer = () => {
-  const server = http.createServer(app.handleReqRes);
-  server.listen(environment.port, () => {
-    console.log(`listening to port ${environment.port}`);
-  });
+  // start the workers
+  workers.init();
 };
 
-// handle Request Response
-app.handleReqRes = handleReqRes;
+app.init();
 
-// start the server
-app.createServer();
+// export the app
+module.exports = app;
