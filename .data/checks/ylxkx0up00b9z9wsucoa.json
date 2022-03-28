@@ -1,9 +1,0 @@
-{
-    "id": "ylxkx0up00b9z9wsucoa",
-    "userPhone": "01771323554",
-    "protocol": "https",
-    "url": "google.com",
-    "method": "GET",
-    "successCodes": [200, 201, 301],
-    "timeoutSeconds": 2
-}
