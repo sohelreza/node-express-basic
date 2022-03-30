@@ -324,7 +324,30 @@ check out the code to know the basic setup for a node js proeject.
 
 ********************************************** TUTORIAL 15 ( Introduction to Express JS )******************************************************
 
-00:00 hours running
+
+-> to install express : npm i express
+
+-> a simple express js code can be like this:
+
+const express = require('express');
+
+const app = express();
+
+app.get('/', (req, res)=>{
+	res.send('This is home page');
+});
+
+app.post('/', (req, res)=>{
+	res.send('This is home page with post request');
+});
+
+app.listen(3000, ()=>{
+	console.log('Listening on port 3000');
+});
+
+************************************************** TUTORIAL 16 ( express() function )*********************************************************
+
+
 
 
 
