@@ -3,26 +3,36 @@
  * Title: Project Initial File
  * Description: Initial file to start the node server and workers
  * Author: S. M. Sohel Reza (ChefOnline)
- * Date: 20/03/2022
+ * Date: 20/04/2022
  *
  */
 
 // Dependencies
-const server = require("./lib/server");
-const workers = require("./lib/worker");
+const express = require("express");
+const mongoose = require("mongoose");
+const todoHandler = require("./routeHandler/todoHandler");
 
-// app object - module scaffolding
-const app = {};
+// express app initialization
+const app = express();
+app.use(express.json());
 
-app.init = () => {
-  // start the server
-  server.init();
+// database connection with mongoose
+mongoose
+  .connect("mongodb://localhost/todos")
+  .then(() => console.log("connection successful"))
+  .catch((err) => console.log(err));
 
-  // start the workers
-  workers.init();
-};
+// application routes
+app.use("/todo", todoHandler);
 
-app.init();
+// default error handler
+function errorHandler(err, req, res, next) {
+  if (res.headersSent) {
+    return next(err);
+  }
+  res.status(500).json({ error: err });
+}
 
-// export the app
-module.exports = app;
+app.listen(3000, () => {
+  console.log("app listening at port 3000");
+});
