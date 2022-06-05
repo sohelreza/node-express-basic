@@ -5,19 +5,60 @@ const todoSchema = require("../schemas/todoSchema");
 const Todo = new mongoose.model("Todo", todoSchema);
 
 // GET ALL THE TODOS
-router.get("/", async (req, res) => {
-  await Todo.find({ status: "active" }, (err, data) => {
-    if (err) {
-      res.status(500).json({
-        error: "There was a server side error!",
-      });
-    } else {
-      res.status(200).json({
-        result: data,
-        message: "Success",
-      });
-    }
+router.get("/", (req, res) => {
+  Todo.find({ status: "active" })
+    .select({
+      _id: 0,
+      _v: 0,
+      date: 0,
+    })
+    .limit(2)
+    .exec((err, data) => {
+      if (err) {
+        res.status(500).json({
+          error: "There was a server side error!",
+        });
+      } else {
+        res.status(200).json({
+          result: data,
+          message: "Success",
+        });
+      }
+    });
+});
+
+// GET ACTIVE TODO
+router.get("/active", async (req, res) => {
+  const todo = new Todo();
+
+  const data = await todo.findActive();
+
+  res.status(200).json({
+    data,
   });
+});
+
+// GET ACTIVE TODOS WITH CALLBACK
+router.get("/active-callback", (req, res) => {
+  const todo = new Todo();
+
+  todo.findActiveByCallback((err, data) => {
+    res.status(200).json({ data });
+  });
+});
+
+// GET ACTIVE TODOS WITH STATIC METHOD
+router.get("/js", async (req, res) => {
+  const data = await Todo.findByJs();
+
+  res.status(200).json({ data });
+});
+
+// GET TODOS BY LANGUAGE
+router.get("/language", async (req, res) => {
+  const data = await Todo.find().byLanguage("js");
+
+  res.status(200).json({ data });
 });
 
 // GET A TODO BY ID
@@ -37,10 +78,10 @@ router.get("/:id", async (req, res) => {
 });
 
 // POST A TODO
-router.post("/", async (req, res) => {
+router.post("/", (req, res) => {
   const newTodo = new Todo(req.body);
 
-  await newTodo.save((err) => {
+  newTodo.save((err) => {
     if (err) {
       res.status(500).json({
         error: "There was a server side error!",

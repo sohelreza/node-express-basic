@@ -406,6 +406,17 @@ app.listen(3000, ()=>{
 
 
 
+*********************************** TUTORIAL 27 ( mongoose Instance Methods, Static & Query Helpers )******************************************
+
+A basic pattern while using mongo express framework :
+
+	-> create a schema from mongoose schema class
+	-> create a model (which is an another class) from mongoose model class & pass schema to it
+	-> create a document using model class
+	-> call necessary model instance method using document
+
+
+
 
 
 

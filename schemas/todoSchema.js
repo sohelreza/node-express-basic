@@ -16,4 +16,28 @@ const todoSchema = mongoose.Schema({
   },
 });
 
+// INSTANCE METHODS
+todoSchema.methods = {
+  findActive: function () {
+    return mongoose.model("Todo").find({ status: "active" });
+  },
+  findActiveByCallback: function (callback) {
+    return mongoose.model("Todo").find({ status: "active" }, callback);
+  },
+};
+
+// STATIC METHODS
+todoSchema.statics = {
+  findByJs: function () {
+    return this.find({ title: /js/i });
+  },
+};
+
+// QUERY HELPERS
+todoSchema.query = {
+  byLanguage: function (language) {
+    return this.find({ title: new RegExp(language, "i") });
+  },
+};
+
 module.exports = todoSchema;
