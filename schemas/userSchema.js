@@ -1,3 +1,13 @@
+/*
+ *
+ * Title: Schema for User
+ * Description: User Schema
+ * Author: S. M. Sohel Reza (ChefOnline)
+ * Date: 08/06/2022
+ *
+ *
+ */
+
 const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({

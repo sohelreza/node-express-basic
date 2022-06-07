@@ -1,3 +1,13 @@
+/*
+ *
+ * Title: User Authorization
+ * Description: Authorization using jwt
+ * Author: S. M. Sohel Reza (ChefOnline)
+ * Date: 08/06/2022
+ *
+ *
+ */
+
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");

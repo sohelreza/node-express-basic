@@ -1,3 +1,13 @@
+/*
+ *
+ * Title: JWT middleware
+ * Description: check jwt token
+ * Author: S. M. Sohel Reza (ChefOnline)
+ * Date: 08/06/2022
+ *
+ *
+ */
+
 const jwt = require("jsonwebtoken");
 
 const checkLogin = (req, res, next) => {
