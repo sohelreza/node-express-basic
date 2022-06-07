@@ -421,6 +421,20 @@ A basic pattern while using mongo express framework :
 
 
 
+***************************************** TUTORIAL 28 ( Authenticate with JSON Web Token (JWT) )***********************************************
+
+
+
+
+
+
+
+
+************************************************ TUTORIAL 29 ( Populate Relational Data )*****************************************************
+
+
+
+
 
 
 
